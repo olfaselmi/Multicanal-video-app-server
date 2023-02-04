@@ -1,14 +1,13 @@
 const express = require("express");
 const startServer = require("./utils/startServer");
 
-// server creation 
+const auth = require("./routes/api/auth");
+
+// server creation
 const app = express();
 
+// API endpoints
+app.use("/api/auth", auth);
 
-app.get("/" , async (req ,res) => {
-    res.send("Hello from the backend")
-})
- 
-
-// function that starts server 
+// function that starts server
 startServer(app);
