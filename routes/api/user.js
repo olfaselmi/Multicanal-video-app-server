@@ -1,10 +1,12 @@
 const express = require("express");
 const gravatar = require("gravatar");
 const { check, validationResult } = require("express-validator");
-const User = require("../../mongodb/models/user");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+
+const User = require("../../mongodb/models/user");
+const Profile = require("../../mongodb/models/profile");
 
 //@author Olfa selmi
 //@Route POST api/user/register
@@ -24,17 +26,17 @@ router.post(
     }),
   ],
   async (req, res) => {
-   // Check inputs validation
+    // Check inputs validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     const { name, email, password } = req.body;
-    
+
     try {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(400).json({ error: 'Email already exists' });
+        return res.status(400).json({ error: "Email already exists" });
       }
       // Get user avatar
       const avatar = gravatar.url(email, {
@@ -42,7 +44,7 @@ router.post(
         r: "pg",
         d: "mm",
       });
-    // This doesn't create the user it just create an inctance of it (we have to implement the .save();)
+      // This doesn't create the user it just create an inctance of it (we have to implement the .save();)
       user = new User({
         name,
         email,
@@ -55,6 +57,15 @@ router.post(
       // I added the toString() otherwise it didn't work thanks to : https://github.com/bradtraversy/nodeauthapp/issues/7
       user.password = await bcrypt.hash(password.toString(), salt);
       await user.save();
+
+      // Create a profile for the newly registered user
+      const profile = new Profile({
+        user: user._id,
+        handle: `${name.split(" ")[0]}${user._id}`,
+      });
+
+      await profile.save();
+
       res.status(200).json({
         msg: "User registered successfully",
         user: user,

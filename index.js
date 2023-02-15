@@ -6,7 +6,6 @@ const startServer = require("./utils/startServer");
 const auth = require("./routes/api/auth");
 const user = require("./routes/api/user");
 
-
 //Connect Database
 connectDB();
 // server creation
