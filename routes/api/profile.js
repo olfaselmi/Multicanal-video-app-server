@@ -3,7 +3,7 @@ const { check, validationResult } = require("express-validator");
 
 const Profile = require("../../mongodb/models/profile");
 const User = require("../../mongodb/models/user");
-
+const authMiddleware = require("../../middleware/authMiddleware");
 const router = express.Router();
 
 //@author Olfa selmi
@@ -15,12 +15,16 @@ const router = express.Router();
 router.post(
   "/update",
   [
-    check("company", "Company is required").not().isEmpty(),
-    check("location", "Location is required").not().isEmpty(),
+    authMiddleware,
+    [
+      check("company", "Company is required").not().isEmpty(),
+      check("location", "Location is required").not().isEmpty(),
+    ]
   ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      
       return res.status(400).json({ errors: errors.array() });
     }
     const { id, company, location } = req.body;
@@ -28,7 +32,6 @@ router.post(
     if (!user) {
       return res.status(400).json({ message: "User not found!" });
     }
-console.log(user);
     const profileFields = {};
     profileFields.user = id;
     if (company) profileFields.company = company;
@@ -51,7 +54,7 @@ console.log(user);
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
-  }
+    }
   }
 );
 module.exports = router;
