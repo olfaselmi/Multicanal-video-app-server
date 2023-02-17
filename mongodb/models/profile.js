@@ -23,29 +23,14 @@ const profileSchema = new Schema({
   status: {
     type: String,
   },
-  skills: {
-    type: [String],
-  },
   bio: {
     type: String,
   },
-  social: {
-    youtube: {
-      type: String,
-    },
-    twitter: {
-      type: String,
-    },
-    facebook: {
-      type: String,
-    },
-    linkedin: {
-      type: String,
-    },
-    instagram: {
-      type: String,
-    },
-  },
+  mobile:
+  {
+    type:String,
+  }
+   ,
   date: {
     type: Date,
     default: Date.now,

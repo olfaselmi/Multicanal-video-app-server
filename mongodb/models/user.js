@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+  //LastName
+  //Role/SimpleUser
   name: {
     type: String,
     required: true
