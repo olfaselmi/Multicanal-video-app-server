@@ -1,42 +1,23 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const profileSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  handle: {
-    type: String,
-    required: true,
-    max: 40,
-  },
-  company: {
-    type: String,
-  },
-  website: {
-    type: String,
-  },
-  location: {
-    type: String,
-  },
-  status: {
-    type: String,
-  },
-  bio: {
-    type: String,
-  },
-  mobile:
-  {
-    type:String,
-  }
-   ,
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+const directMessageSchema = require("./chat/directMessages");
+
+
+const profileSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    handle: { type: String, required: true, max: 40 },
+    firstName: { type: String },
+    lastName: { type: String },
+    description: { type: String },
+    email: { type: String },
+    location: { type: String },
+    status: { type: String },
+    coverImage: { type: String },
+    directMessages: [directMessageSchema]
+
+
 });
 
-const Profile = mongoose.model("Profile", profileSchema);
+const profile = mongoose.model("profile", profileSchema);
 
-module.exports = Profile;
+module.exports = profile;
